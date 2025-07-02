@@ -13,21 +13,21 @@ try {
 
 const psychologistName = profile ? `${profile.user.first_name} ${profile.user.last_name}` : '[Nombre]';
 ---
-<header class="bg-brand-light shadow-md">
+<header class="bg-brand-secondary shadow-md sticky top-0 z-50">
   <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
-    <a href="/" class="text-xl font-bold text-gray-800">Psicóloga {psychologistName}</a>
+    <a href="/" class="text-xl font-bold text-white">Psicóloga {psychologistName}</a>
     <div class="md:hidden">
       <button id="menu-toggle">
         {/* Icono de hamburguesa */}
-        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
+        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
       </button>
     </div>
     <div id="mobile-menu" class="md:flex items-center space-x-4 hidden md:block">
-      <a href="/" class="block md:inline-block hover:text-brand-primary-dark">Inicio</a>
-      <a href="/about" class="block md:inline-block hover:text-brand-primary-dark">Sobre Mí</a>
-      <a href="/servicios" class="block md:inline-block hover:text-brand-primary-dark">Servicios</a>
-      <a href="/blog" class="block md:inline-block hover:text-brand-primary-dark">Blog</a>
-      <a href="/contact" class="block md:inline-block hover:text-brand-primary-dark">Contacto</a>
+      <a href="/" class="block md:inline-block text-white hover:text-brand-accent">Inicio</a>
+      <a href="/about" class="block md:inline-block text-white hover:text-brand-accent">Sobre Mí</a>
+      <a href="/servicios" class="block md:inline-block text-white hover:text-brand-accent">Servicios</a>
+      <a href="/blog" class="block md:inline-block text-white hover:text-brand-accent">Blog</a>
+      <a href="/contact" class="block md:inline-block text-white hover:text-brand-accent">Contacto</a>
     </div>
   </nav>
 </header>

@@ -30,7 +30,11 @@ try {
 }
 ---
 
-<Layout title={service ? service.title : "Servicio no encontrado"} description={service ? service.description.substring(0, 160) : ""}>
+<Layout 
+  title={service ? service.title : "Servicio no encontrado"} 
+  description={service ? service.description.substring(0, 160) : ""}
+  image={service?.image_url}
+>
   {error ? (
     <div class="text-center py-20 text-red-500">Error: {error}</div>
   ) : !service ? (

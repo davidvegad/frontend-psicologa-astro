@@ -19,7 +19,11 @@ try {
 const psychologistName = profile ? `${profile.user.first_name} ${profile.user.last_name}` : '[Nombre]';
 ---
 
-<Layout title={`Sobre Mí - ${psychologistName}`} description="Conoce más sobre la psicóloga y su filosofía de trabajo.">
+<Layout 
+  title={`Sobre Mí - ${psychologistName}`} 
+  description="Conoce más sobre la psicóloga y su filosofía de trabajo."
+  image={profile?.photo_url}
+>
   {error ? (
     <div class="text-center py-20 text-red-500">Error: {error}</div>
   ) : !profile ? (

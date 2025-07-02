@@ -36,21 +36,25 @@ try {
 const psychologistName = profile ? `${profile.user.first_name} ${profile.user.last_name}` : '[Nombre]';
 ---
 
-<Layout title={`Psicóloga ${psychologistName} - Bienestar y Terapia`} description="Encuentra un espacio seguro para tu bienestar emocional. Terapia individual, de pareja y más.">
+<Layout 
+  title={`Psicóloga ${psychologistName} - Bienestar y Terapia`} 
+  description="Encuentra un espacio seguro para tu bienestar emocional. Terapia individual, de pareja y más."
+  image={profile?.photo_url}
+>
   {error ? (
     <div class="text-center py-20 text-red-500">Error: {error}</div>
   ) : (
-    <div class="bg-brand-light">
+    <div>
       {/* Sección Hero (Bienvenida) */}
-      <section class="text-center py-24 px-4 bg-brand-light bg-teal-50">
-        <div class="max-w-7xl mx-auto">
+      <section class="text-center py-24 px-4">
+        <div class="max-w-7xl mx-auto" data-aos="fade-up">
           <h1 class="font-serif text-5xl md:text-6xl font-bold text-brand-secondary">
             Un Espacio Seguro Para Crecer
           </h1>
           <p class="text-xl text-brand-text mt-6 max-w-2xl mx-auto">
             Te acompaño en tu proceso de autoconocimiento y bienestar emocional a través de una terapia cercana y profesional.
           </p>
-          <a href="/contact" class="mt-10 inline-block bg-brand-primary text-white font-bold py-4 px-10 rounded-full text-lg hover:bg-brand-primary-dark transition-all duration-300 shadow-lg hover:shadow-xl">
+          <a href="/contact" class="mt-10 inline-block bg-brand-primary text-white font-bold py-4 px-10 rounded-full text-lg hover:bg-brand-primary-dark transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105">
             Agendar una Cita
           </a>
         </div>
@@ -58,8 +62,8 @@ const psychologistName = profile ? `${profile.user.first_name} ${profile.user.la
 
       {/* Sección "Sobre Mí" (Teaser) */}
       {profile && (
-        <section data-aos="fade-up" class="py-20">
-          <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid md:grid-cols-2 gap-12 items-center">
+        <section class="py-20">
+          <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid md:grid-cols-2 gap-12 items-center" data-aos="fade-up">
             <div class="order-2 md:order-1">
               <h2 class="font-serif text-4xl font-bold text-brand-secondary mb-4">Hola, soy {profile.user.first_name}</h2>
               <p class="text-brand-text text-lg mb-6">{profile.bio.substring(0, 250)}...</p>
@@ -75,12 +79,12 @@ const psychologistName = profile ? `${profile.user.first_name} ${profile.user.la
       )}
 
       {/* Sección Servicios */}
-      <section data-aos="fade-up" data-aos-delay="200" class="bg-brand-light py-20">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <section class="py-20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center" data-aos="fade-up">
           <h2 class="font-serif text-4xl font-bold text-brand-secondary mb-12">¿Cómo Puedo Ayudarte?</h2>
           <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {services.map((service) => (
-              <a href={`/servicios/${service.slug}`} class="bg-white p-8 rounded-2xl text-left hover:-translate-y-2 transition-transform duration-300 shadow-sm hover:shadow-xl">
+            {services.map((service, index) => (
+              <a href={`/servicios/${service.slug}`} class="bg-white p-8 rounded-2xl text-left hover:-translate-y-2 transition-transform duration-300 shadow-sm hover:shadow-xl" data-aos="fade-up" data-aos-delay={index * 100}>
                 <svg class="w-12 h-12 text-brand-primary mb-4" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                   <path fill-rule="evenodd" d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12Zm13.36-1.814a.75.75 0 1 0-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 0 0-1.06 1.06l2.25 2.25a.75.75 0 0 0 1.14-.094l3.75-5.25Z" clip-rule="evenodd" />
                 </svg>
@@ -93,12 +97,12 @@ const psychologistName = profile ? `${profile.user.first_name} ${profile.user.la
       </section>
 
       {/* Sección de Testimonios */}
-      <section data-aos="fade-up" data-aos-delay="200" class="py-20 bg-brand-light">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <section class="py-20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8" data-aos="fade-up">
           <h2 class="text-3xl font-bold text-brand-secondary text-center mb-12 font-serif">Lo que dicen mis pacientes</h2>
           <div class="max-w-3xl mx-auto space-y-8">
-            {testimonials.map((testimonial) => (
-              <blockquote key={testimonial.id} class="p-8 bg-white rounded-xl shadow-lg relative">
+            {testimonials.map((testimonial, index) => (
+              <blockquote key={testimonial.id} class="p-8 bg-white rounded-xl shadow-lg relative" data-aos="fade-up" data-aos-delay={index * 100}>
                 <p class="text-xl text-brand-text italic relative z-10">“{testimonial.quote}”</p>
                 <cite class="block text-right mt-4 font-semibold text-brand-secondary not-italic">- {testimonial.author}</cite>
                 <div class="absolute top-2 left-4 text-8xl text-brand-primary opacity-10 font-serif">“</div>
@@ -109,12 +113,12 @@ const psychologistName = profile ? `${profile.user.first_name} ${profile.user.la
       </section>
 
       {/* Sección de Últimos Artículos del Blog */}
-      <section data-aos="fade-up" data-aos-delay="200" class="bg-brand-light py-20">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <section class="py-20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8" data-aos="fade-up">
           <h2 class="text-4xl font-bold text-brand-secondary text-center mb-12 font-serif">Desde Mi Blog</h2>
           <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {posts.map((post) => (
-              <a href={`/blog/${post.slug}`} key={post.id} class="block border rounded-lg overflow-hidden shadow-md hover:shadow-2xl transition-shadow duration-300 bg-white">
+            {posts.map((post, index) => (
+              <a href={`/blog/${post.slug}`} key={post.id} class="block border rounded-lg overflow-hidden shadow-md hover:shadow-2xl transition-shadow duration-300 bg-white transform hover:-translate-y-2" data-aos="fade-up" data-aos-delay={index * 100}>
                 <Image src={post.featured_image_url || 'https://via.placeholder.com/400x250'} alt={post.title} width={400} height={250} class="w-full h-48 object-cover"/>
                 <div class="p-6">
                   <h3 class="text-xl font-bold font-serif text-brand-secondary mb-2">{post.title}</h3>

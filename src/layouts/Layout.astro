@@ -8,27 +8,55 @@ import '../styles/global.css';
 interface Props {
   title: string;
   description: string;
+  image?: string;
 }
 
-const { title, description } = Astro.props;
+const { title, description, image = 'https://via.placeholder.com/1200x630.png?text=Psicóloga' } = Astro.props;
+const canonicalUrl = new URL(Astro.url.pathname, Astro.site);
 ---
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" class="scroll-smooth">
   <head>
     <meta charset="utf-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width" />
     <meta name="generator" content={Astro.generator} />
+    
+    <!-- SEO & Meta Tags -->
     <title>{title}</title>
     <meta name="description" content={description} />
+    <link rel="canonical" href={canonicalUrl} />
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonicalUrl} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={new URL(image, Astro.site)} />
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:url" content={canonicalUrl} />
+    <meta property="twitter:title" content={title} />
+    <meta property="twitter:description" content={description} />
+    <meta property="twitter:image" content={new URL(image, Astro.site)} />
+
+    <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
     <ViewTransitions />
   </head>
-  <body class="flex flex-col min-h-screen bg-brand-light text-brand-text">
+  <body class="flex flex-col min-h-screen bg-gradient-to-b from-teal-100 to-brand-light text-brand-text pt-20">
     <Header />
     <main class="flex-grow">
       <slot />
     </main>
     <Footer />
     <WhatsAppButton />
+    <script is:inline src="https://unpkg.com/aos@next/dist/aos.js"></script>
+    <script is:inline>
+      AOS.init({
+        duration: 800,
+        once: true,
+      });
+    </script>
   </body>
 </html>
