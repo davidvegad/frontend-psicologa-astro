@@ -5,6 +5,6 @@ import react from '@astrojs/react';
 
 // https://astro.build/config
 export default defineConfig({
-  site: 'https://tumbesfc-media.s3.us-east-2.amazonaws.com/meta/maya.jpeg', // Reemplaza esto con la URL de tu sitio
+  site: process.env.PUBLIC_SITE_URL || 'http://localhost:4321', // Lee la URL del entorno o usa localhost para desarrollo
   integrations: [tailwindcss(), react()]
 });
