@@ -1,0 +1,86 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+const apiUrl = import.meta.env.PUBLIC_API_URL;
+---
+
+<Layout title="Contacto" description="Ponte en contacto con la psicóloga para agendar una cita o resolver tus dudas.">
+  <div class="mx-auto px-4 sm:px-6 lg:px-8 py-8 max-w-2xl">
+    <h1 class="text-4xl font-bold text-center mb-8 font-serif text-brand-secondary">Ponte en Contacto</h1>
+    <form id="contact-form" data-api-url={JSON.stringify(apiUrl)} class="bg-white p-8 rounded-lg shadow-lg">
+      <div class="mb-4">
+        <label for="name" class="block text-brand-text font-bold mb-2">Nombre</label>
+        <input type="text" id="name" name="name" required class="shadow appearance-none border rounded w-full py-2 px-3 text-brand-text leading-tight focus:outline-none focus:shadow-outline" />
+      </div>
+      <div class="mb-4">
+        <label for="email" class="block text-brand-text font-bold mb-2">Email</label>
+        <input type="email" id="email" name="email" required class="shadow appearance-none border rounded w-full py-2 px-3 text-brand-text leading-tight focus:outline-none focus:shadow-outline" />
+      </div>
+      <div class="mb-6">
+        <label for="message" class="block text-brand-text font-bold mb-2">Mensaje</label>
+        <textarea id="message" name="message" required rows="5" class="shadow appearance-none border rounded w-full py-2 px-3 text-brand-text leading-tight focus:outline-none focus:shadow-outline"></textarea>
+      </div>
+      <div class="text-center">
+        <button type="submit" id="submit-button" class="bg-brand-primary hover:bg-brand-primary-dark text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline disabled:bg-gray-400">
+          Enviar Mensaje
+        </button>
+      </div>
+      <p id="status-message" class="text-center mt-4"></p>
+    </form>
+  </div>
+</Layout>
+
+<script is:inline type="module">
+  const form = document.getElementById('contact-form');
+  const apiUrl = JSON.parse(form.dataset.apiUrl);
+
+  console.log('Contact form script loaded.');
+  console.log(`Client-side API URL from data attribute: ${apiUrl}`);
+
+  form.addEventListener('submit', async (event) => {
+    console.log('Submit event listener triggered.');
+    event.preventDefault(); // This should stop the default form submission
+
+    console.log('Default form submission prevented.');
+
+    const submitButton = document.getElementById('submit-button');
+    const statusMessage = document.getElementById('status-message');
+
+    submitButton.disabled = true;
+    statusMessage.textContent = 'Enviando...';
+    statusMessage.className = 'text-center mt-4 text-gray-600';
+
+    const formData = new FormData(form);
+    const data = Object.fromEntries(formData.entries());
+
+    try {
+      console.log(`Attempting to send POST request to: ${apiUrl}/contact/`);
+
+      const res = await fetch(`${apiUrl}/contact/`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+      });
+
+      console.log('Fetch response received.', res);
+
+      if (res.ok) {
+        statusMessage.textContent = '¡Mensaje enviado con éxito! Te contactaremos pronto.';
+        statusMessage.className = 'text-center mt-4 text-green-500';
+        form.reset();
+      } else {
+        const errorData = await res.json();
+        console.error('Server responded with an error:', errorData);
+        throw new Error(errorData.detail || 'La respuesta del servidor no fue OK');
+      }
+    } catch (error) {
+      console.error('Error during fetch operation:', error);
+      statusMessage.textContent = `Hubo un error al enviar el mensaje: ${error.message}. Por favor, inténtalo de nuevo.`;
+      statusMessage.className = 'text-center mt-4 text-red-500';
+    } finally {
+      submitButton.disabled = false;
+    }
+  });
+</script>

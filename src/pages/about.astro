@@ -1,0 +1,55 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Image from 'astro/components/Image.astro';
+
+const apiUrl = import.meta.env.PUBLIC_API_URL;
+let profile = null;
+let error = null;
+
+try {
+  const res = await fetch(`${apiUrl}/profile/1/`);
+  if (!res.ok) {
+    throw new Error('No se pudo cargar la información del perfil.');
+  }
+  profile = await res.json();
+} catch (err) {
+  error = err.message;
+}
+
+const psychologistName = profile ? `${profile.user.first_name} ${profile.user.last_name}` : '[Nombre]';
+---
+
+<Layout title={`Sobre Mí - ${psychologistName}`} description="Conoce más sobre la psicóloga y su filosofía de trabajo.">
+  {error ? (
+    <div class="text-center py-20 text-red-500">Error: {error}</div>
+  ) : !profile ? (
+    <div class="text-center py-20">No se pudo cargar la información del perfil.</div>
+  ) : (
+    <div class="mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div class="max-w-4xl mx-auto">
+        <div class="text-center">
+          <h1 class="text-4xl font-bold mb-8 font-serif text-brand-secondary">Conóceme</h1>
+          {profile.photo_url && (
+            <div class="inline-block relative mb-10">
+              <Image 
+                src={profile.photo_url} 
+                alt={`Foto de ${profile.user.first_name}`}
+                width={320}
+                height={320}
+                class="rounded-full object-cover shadow-2xl"
+              />
+            </div>
+          )}
+        </div>
+        
+        <div class="prose lg:prose-xl max-w-none text-brand-text">
+          <h2 class="font-serif text-3xl text-brand-secondary">Mi Biografía</h2>
+          <p>{profile.bio}</p>
+          <br/>
+          <h2 class="font-serif text-3xl text-brand-secondary">Mi Filosofía de Trabajo</h2>
+          <p>{profile.philosophy}</p>
+        </div>
+      </div>
+    </div>
+  )}
+</Layout>

@@ -1,0 +1,56 @@
+---
+const apiUrl = import.meta.env.PUBLIC_API_URL;
+let profile = null;
+
+try {
+  const res = await fetch(`${apiUrl}/profile/1/`);
+  if (res.ok) {
+    profile = await res.json();
+  }
+} catch (err) {
+  console.error("Error fetching profile for header:", err);
+}
+
+const psychologistName = profile ? `${profile.user.first_name} ${profile.user.last_name}` : '[Nombre]';
+---
+<header class="bg-brand-light shadow-md">
+  <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
+    <a href="/" class="text-xl font-bold text-gray-800">Psicóloga {psychologistName}</a>
+    <div class="md:hidden">
+      <button id="menu-toggle">
+        {/* Icono de hamburguesa */}
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
+      </button>
+    </div>
+    <div id="mobile-menu" class="md:flex items-center space-x-4 hidden md:block">
+      <a href="/" class="block md:inline-block hover:text-brand-primary-dark">Inicio</a>
+      <a href="/about" class="block md:inline-block hover:text-brand-primary-dark">Sobre Mí</a>
+      <a href="/servicios" class="block md:inline-block hover:text-brand-primary-dark">Servicios</a>
+      <a href="/blog" class="block md:inline-block hover:text-brand-primary-dark">Blog</a>
+      <a href="/contact" class="block md:inline-block hover:text-brand-primary-dark">Contacto</a>
+    </div>
+  </nav>
+</header>
+
+<script is:inline>
+  function initMobileMenu() {
+    const menuToggle = document.getElementById('menu-toggle');
+    const mobileMenu = document.getElementById('mobile-menu');
+
+    if (menuToggle && mobileMenu) {
+      menuToggle.addEventListener('click', () => {
+        mobileMenu.classList.toggle('hidden');
+      });
+
+      // Cierra el menú cuando se hace clic en un enlace (para móvil)
+      mobileMenu.querySelectorAll('a').forEach(link => {
+        link.addEventListener('click', () => {
+          mobileMenu.classList.add('hidden');
+        });
+      });
+    }
+  }
+
+  // Vuelve a ejecutar el script en cada carga de página para que funcione con las transiciones de Astro
+  document.addEventListener('astro:page-load', initMobileMenu);
+</script>

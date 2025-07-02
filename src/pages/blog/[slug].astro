@@ -1,0 +1,70 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Image from 'astro/components/Image.astro';
+
+export async function getStaticPaths() {
+  const apiUrl = import.meta.env.PUBLIC_API_URL;
+  const res = await fetch(`${apiUrl}/posts/?status=published`);
+  const data = await res.json();
+  const posts = data || []; // Corrected: Access data directly
+
+  return posts.map((post) => ({
+    params: { slug: post.slug },
+  }));
+}
+
+const { slug } = Astro.params;
+const apiUrl = import.meta.env.PUBLIC_API_URL;
+
+let post = null;
+let error = null;
+
+try {
+  const res = await fetch(`${apiUrl}/posts/${slug}/`);
+  if (!res.ok) {
+    throw new Error('No se pudo encontrar el artículo.');
+  }
+  post = await res.json();
+} catch (err) {
+  error = err.message;
+}
+
+const postDate = post ? new Date(post.created_at).toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric' }) : '';
+---
+
+<Layout title={post ? post.title : "Artículo no encontrado"} description={post ? post.content.substring(0, 160) : ""}>
+  {error ? (
+    <div class="text-center py-20 text-red-500">Error: {error}</div>
+  ) : !post ? (
+    <div class="text-center py-20">Artículo no encontrado.</div>
+  ) : (
+    <div class="mx-auto px-4 sm:px-6 lg:px-8 py-8 max-w-4xl">
+      <article>
+        <h1 class="text-4xl font-bold mb-4 font-serif text-brand-secondary">{post.title}</h1>
+        <div class="text-gray-500 mb-8">
+          <span>Por {post.author.first_name} {post.author.last_name}</span>
+          <span class="mx-2">&bull;</span>
+          <span>{postDate}</span>
+        </div>
+
+        {post.featured_image_url && (
+          <div class="mb-8 rounded-lg overflow-hidden shadow-lg">
+            <Image 
+              src={post.featured_image_url} 
+              alt={post.title}
+              width={1200}
+              height={600}
+              class="w-full h-auto object-cover"
+            />
+          </div>
+        )}
+
+        <div class="prose lg:prose-xl max-w-none text-brand-text">
+          {post.content.split('\n').map((paragraph, index) => (
+            <p key={index}>{paragraph}</p>
+          ))}
+        </div>
+      </article>
+    </div>
+  )}
+</Layout>

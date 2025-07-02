@@ -1,0 +1,61 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Image from 'astro/components/Image.astro';
+
+export async function getStaticPaths() {
+  const apiUrl = import.meta.env.PUBLIC_API_URL;
+  const res = await fetch(`${apiUrl}/services/`);
+  const data = await res.json();
+  const services = data || []; // Corrected: Access data directly
+
+  return services.map((service) => ({
+    params: { slug: service.slug },
+  }));
+}
+
+const { slug } = Astro.params;
+const apiUrl = import.meta.env.PUBLIC_API_URL;
+
+let service = null;
+let error = null;
+
+try {
+  const res = await fetch(`${apiUrl}/services/${slug}/`);
+  if (!res.ok) {
+    throw new Error('No se pudo encontrar el servicio.');
+  }
+  service = await res.json();
+} catch (err) {
+  error = err.message;
+}
+---
+
+<Layout title={service ? service.title : "Servicio no encontrado"} description={service ? service.description.substring(0, 160) : ""}>
+  {error ? (
+    <div class="text-center py-20 text-red-500">Error: {error}</div>
+  ) : !service ? (
+    <div class="text-center py-20">Servicio no encontrado.</div>
+  ) : (
+    <div class="mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      {service.image_url && (
+        <div class="mb-8 rounded-lg overflow-hidden shadow-lg">
+          <Image
+            src={service.image_url}
+            alt={`Imagen de ${service.title}`}
+            width={1200}
+            height={600}
+            class="w-full h-auto object-cover"
+          />
+        </div>
+      )}
+      
+      <h1 class="text-4xl font-bold mb-4 font-serif text-brand-secondary">{service.title}</h1>
+      
+      <div class="prose lg:prose-xl max-w-none text-brand-text">
+         {service.description.split('\n').map((paragraph) => (
+          <p>{paragraph}</p>
+        ))}
+      </div>
+    </div>
+  )}
+</Layout>

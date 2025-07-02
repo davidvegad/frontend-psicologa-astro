@@ -1,0 +1,24 @@
+---
+import SocialIcons from './SocialIcons.jsx';
+
+const apiUrl = import.meta.env.PUBLIC_API_URL;
+
+let siteSettings = null;
+let error = null;
+
+try {
+  const res = await fetch(`${apiUrl}/settings/`);
+  if (!res.ok) {
+    throw new Error('No se pudieron obtener los ajustes del sitio.');
+  }
+  siteSettings = await res.json();
+} catch (err) {
+  error = err.message;
+}
+---
+
+{siteSettings && (
+  <SocialIcons siteSettings={siteSettings} client:load />
+)}
+
+{error && <p class="text-red-500 text-center">Error al cargar la configuración de redes sociales: {error}</p>}

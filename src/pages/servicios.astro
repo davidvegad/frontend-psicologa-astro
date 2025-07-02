@@ -1,0 +1,42 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { CheckCircleIcon } from '@heroicons/react/24/solid';
+
+const apiUrl = import.meta.env.PUBLIC_API_URL;
+let services = [];
+let error = null;
+
+try {
+  const res = await fetch(`${apiUrl}/services/`);
+  if (!res.ok) {
+    throw new Error('No se pudieron obtener los datos de los servicios');
+  }
+  const data = await res.json();
+  services = data.results || data;
+} catch (err) {
+  error = err.message;
+}
+---
+
+<Layout title="Servicios - Psicóloga Maya Muñoz" description="Descubre los servicios de terapia individual, de pareja y más.">
+  {error ? (
+    <div class="text-center py-20 text-red-500">Error: {error}</div>
+  ) : (
+    <div class="bg-brand-light py-20">
+      <div class="mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <h2 class="font-serif text-4xl font-bold text-brand-secondary mb-12">¿Cómo Puedo Ayudarte?</h2>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+          {services.map((service) => (
+            <a href={`/servicios/${service.slug}`} class="bg-white p-8 rounded-2xl text-left hover:-translate-y-2 transition-transform duration-300 shadow-sm hover:shadow-xl">
+              <svg class="w-12 h-12 text-brand-primary mb-4" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                <path fill-rule="evenodd" d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12Zm13.36-1.814a.75.75 0 1 0-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 0 0-1.06 1.06l2.25 2.25a.75.75 0 0 0 1.14-.094l3.75-5.25Z" clip-rule="evenodd" />
+              </svg>
+              <h3 class="text-2xl font-bold font-serif text-brand-secondary mb-2">{service.title}</h3>
+              <p class="text-brand-text">{service.description.substring(0, 100)}...</p>
+            </a>
+          ))}
+        </div>
+      </div>
+    </div>
+  )}
+</Layout>

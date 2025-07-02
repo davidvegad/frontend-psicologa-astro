@@ -1,0 +1,51 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Image from 'astro/components/Image.astro';
+
+const apiUrl = import.meta.env.PUBLIC_API_URL;
+let posts = [];
+let error = null;
+
+try {
+  const res = await fetch(`${apiUrl}/posts/?status=published`);
+  if (!res.ok) {
+    throw new Error('No se pudieron obtener los artículos del blog');
+  }
+  const data = await res.json();
+  posts = data.results || data;
+} catch (err) {
+  error = err.message;
+}
+---
+
+<Layout title="Blog - Artículos sobre Psicología y Bienestar" description="Lee los últimos artículos sobre psicología y bienestar.">
+  {error ? (
+    <div class="text-center py-20 text-red-500">Error: {error}</div>
+  ) : (
+    <div class="mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <h1 class="text-4xl font-bold text-center mb-12 font-serif text-brand-secondary">Mi Blog</h1>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        {posts.map((post) => (
+          <a href={`/blog/${post.slug}`} class="flex flex-col border rounded-lg shadow-lg overflow-hidden hover:shadow-2xl transition-shadow duration-300 bg-white">
+            {post.featured_image_url && (
+              <div class="w-full h-48 relative">
+                <Image
+                  src={post.featured_image_url}
+                  alt={post.title}
+                  width={400} // Explicit width
+                  height={250} // Explicit height
+                  class="w-full h-48 object-cover"
+                />
+              </div>
+            )}
+            <div class="p-6 flex-grow flex flex-col">
+              <h2 class="text-2xl font-bold mb-2 font-serif text-brand-secondary">{post.title}</h2>
+              <p class="text-brand-text flex-grow">{post.content.substring(0, 120)}...</p>
+              <span class="text-brand-primary mt-4 font-semibold">Leer artículo completo &rarr;</span>
+            </div>
+          </a>
+        ))}
+      </div>
+    </div>
+  )}
+</Layout>

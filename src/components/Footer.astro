@@ -1,0 +1,25 @@
+---
+import SocialLinks from './SocialLinks.astro';
+
+const apiUrl = import.meta.env.PUBLIC_API_URL;
+let profile = null;
+
+try {
+  const res = await fetch(`${apiUrl}/profile/1/`);
+  if (res.ok) {
+    profile = await res.json();
+  }
+} catch (err) {
+  console.error("Error fetching profile for footer:", err);
+}
+
+const currentYear = new Date().getFullYear();
+const psychologistName = profile ? `${profile.user.first_name} ${profile.user.last_name}` : "[Nombre]";
+---
+
+<footer class="bg-brand-secondary text-white text-center py-8 mt-12">
+  <SocialLinks />
+  <p class="text-gray-300">
+    &copy; {currentYear} Psicóloga {psychologistName}. Todos los derechos reservados.
+  </p>
+</footer>
