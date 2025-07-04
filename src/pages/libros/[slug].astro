@@ -1,0 +1,82 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Image from 'astro/components/Image.astro';
+import PaymentButton from '../../components/PaymentButton.jsx';
+
+export async function getStaticPaths() {
+  const apiUrl = import.meta.env.PUBLIC_API_URL;
+  const res = await fetch(`${apiUrl}/books/`);
+  const data = await res.json();
+  const books = data.results || data;
+
+  return books.map((book) => ({
+    params: { slug: book.slug },
+  }));
+}
+
+const { slug } = Astro.params;
+const apiUrl = import.meta.env.PUBLIC_API_URL;
+
+let book = null;
+let error = null;
+
+try {
+  const res = await fetch(`${apiUrl}/books/${slug}/`);
+  if (!res.ok) {
+    throw new Error('No se pudo encontrar el libro.');
+  }
+  book = await res.json();
+} catch (err) {
+  error = err.message;
+}
+---
+
+<Layout 
+  title={book ? book.title : "Libro no encontrado"} 
+  description={book ? book.description.substring(0, 160) : ""}
+  image={book?.cover_image_url}
+>
+  {error ? (
+    <div class="text-center py-20 text-red-500">Error: {error}</div>
+  ) : !book ? (
+    <div class="text-center py-20">Libro no encontrado.</div>
+  ) : (
+    <div class="mx-auto px-4 sm:px-6 lg:px-8 py-8 max-w-4xl">
+      <div class="grid md:grid-cols-2 gap-8 items-start">
+        <div>
+          {book.cover_image_url && (
+            <div class="mb-8 rounded-lg overflow-hidden shadow-lg">
+              <Image 
+                src={book.cover_image_url} 
+                alt={`Portada de ${book.title}`}
+                width={600}
+                height={900}
+                class="w-full h-auto object-cover"
+              />
+            </div>
+          )}
+        </div>
+        <div>
+          <h1 class="text-4xl font-bold mb-4 font-serif text-brand-secondary">{book.title}</h1>
+          <p class="text-2xl text-brand-primary font-bold mb-6">S/ {book.price}</p>
+          
+          <div class="prose lg:prose-xl max-w-none text-brand-text mb-8">
+            <h2 class="font-serif text-2xl text-brand-secondary">Descripción</h2>
+            {book.description.split('\n').map((paragraph, index) => (
+              <p key={index}>{paragraph}</p>
+            ))}
+          </div>
+
+          <div id="payment-button-container">
+            <PaymentButton 
+              bookSlug={book.slug} 
+              publicKey={import.meta.env.PUBLIC_MERCADOPAGO_PUBLIC_KEY} 
+              client:load 
+            />
+          </div>
+
+        </div>
+      </div>
+    </div>
+  )}
+</Layout>
