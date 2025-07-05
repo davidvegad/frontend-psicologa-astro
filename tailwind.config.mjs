@@ -22,6 +22,7 @@ const config = {
         sans: ['Inter', 'sans-serif'],
         serif: ['Lora', 'serif'],
         abigate: ['Abigate Desgo', 'sans-serif'],
+        montserrat: ['Montserrat', 'sans-serif'],
       },
     },
   },

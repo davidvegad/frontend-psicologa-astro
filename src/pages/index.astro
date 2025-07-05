@@ -46,15 +46,16 @@ const psychologistName = profile ? `${profile.user.first_name} ${profile.user.la
   ) : (
     <div>
       {/* Sección Hero (Bienvenida) */}
-      <section class="text-center py-24 px-4">
-        <div class="max-w-7xl mx-auto" data-aos="fade-up">
+      <section class="relative text-center py-24 px-4 overflow-hidden">
+        <img src="/mancha_azul.png" alt="Mancha decorativa" class="absolute top-0 left-0 w-auto h-full z-0 opacity-50" />
+        <div class="max-w-7xl mx-auto relative z-10" data-aos="fade-up">
           <h1 class="font-abigate text-5xl md:text-6xl font-bold text-brand-secondary">
             Un Espacio Seguro Para Crecer
           </h1>
           <p class="text-xl text-brand-text mt-6 max-w-2xl mx-auto">
             Te acompaño en tu proceso de autoconocimiento y bienestar emocional a través de una terapia cercana y profesional.
           </p>
-          <a href="/contact" class="mt-10 inline-block bg-brand-primary text-white font-bold py-4 px-10 rounded-full text-lg hover:bg-brand-primary-dark transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105">
+          <a href="/contact" class="mt-10 inline-block bg-brand-primary text-white font-bold py-4 px-10 rounded-full text-lg hover:bg-brand-primary-dark transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105" data-aos="zoom-in">
             Agendar una Cita
           </a>
         </div>
@@ -62,11 +63,11 @@ const psychologistName = profile ? `${profile.user.first_name} ${profile.user.la
 
       {/* Sección "Sobre Mí" (Teaser) */}
       {profile && (
-        <section class="py-20">
+        <section class="py-20 bg-[#F6B4A140]">
           <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid md:grid-cols-2 gap-12 items-center" data-aos="fade-up">
             <div class="order-2 md:order-1">
               <h2 class="font-serif text-4xl font-bold text-brand-secondary mb-4">Hola, soy {profile.user.first_name}</h2>
-              <p class="text-brand-text text-lg mb-6">{profile.bio.substring(0, 250)}...</p>
+              <p class="text-brand-text text-lg mb-6 font-montserrat">{profile.bio.substring(0, 250)}...</p>
               <a href="/about" class="font-bold text-brand-primary hover:text-brand-primary-dark transition-colors">
                 Conoce más sobre mí &rarr;
               </a>
@@ -97,23 +98,102 @@ const psychologistName = profile ? `${profile.user.first_name} ${profile.user.la
       </section>
 
       {/* Sección de Testimonios */}
-      <section class="py-20">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8" data-aos="fade-up">
+      <section class="py-20 relative bg-opiniones">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10" data-aos="fade-up">
           <h2 class="text-3xl font-bold text-brand-secondary text-center mb-12 font-serif">Lo que dicen mis pacientes</h2>
-          <div class="max-w-3xl mx-auto space-y-8">
+          <div id="testimonial-carousel" class="max-w-4xl mx-auto relative min-h-[350px] md:h-[160px]"> {/* Altura fija para evitar saltos */}
             {testimonials.map((testimonial, index) => (
-              <blockquote key={testimonial.id} class="p-8 bg-white rounded-xl shadow-lg relative" data-aos="fade-up" data-aos-delay={index * 100}>
-                <p class="text-xl text-brand-text italic relative z-10">“{testimonial.quote}”</p>
+              <blockquote key={testimonial.id} class="p-8 rounded-xl shadow-lg absolute top-0 left-1/2 -translate-x-1/2 w-full md:w-3/5 min-h-[250px] md:min-h-[150px] opacity-0 transition-opacity duration-700 ease-in-out" data-index={index}>
+                <p class="text-xl text-brand-text italic relative z-10 font-bold">“{testimonial.quote}”</p>
                 <cite class="block text-right mt-4 font-semibold text-brand-secondary not-italic">- {testimonial.author}</cite>
                 <div class="absolute top-2 left-4 text-8xl text-brand-primary opacity-10 font-serif">“</div>
               </blockquote>
             ))}
           </div>
+          <div id="testimonial-dots" class="flex justify-center mb-0 space-x-2"></div>
         </div>
       </section>
 
+      <script is:inline>
+        let currentTestimonialIndex = 0;
+        let testimonialInterval;
+
+        function showTestimonial(index) {
+          const testimonials = document.querySelectorAll('#testimonial-carousel blockquote');
+          const dots = document.querySelectorAll('#testimonial-dots .dot');
+
+          if (testimonials.length === 0) return;
+
+          testimonials.forEach((testimonial, i) => {
+            if (i === index) {
+              testimonial.classList.remove('opacity-0');
+              testimonial.classList.add('opacity-100');
+            } else {
+              testimonial.classList.remove('opacity-100');
+              testimonial.classList.add('opacity-0');
+            }
+          });
+
+          dots.forEach((dot, i) => {
+            if (i === index) {
+              dot.classList.add('bg-brand-primary');
+              dot.classList.remove('bg-gray-300');
+            } else {
+              dot.classList.remove('bg-brand-primary');
+              dot.classList.add('bg-gray-300');
+            }
+          });
+        }
+
+        function nextTestimonial() {
+          const testimonials = document.querySelectorAll('#testimonial-carousel blockquote');
+          if (testimonials.length === 0) return;
+
+          currentTestimonialIndex = (currentTestimonialIndex + 1) % testimonials.length;
+          showTestimonial(currentTestimonialIndex);
+        }
+
+        function createDots(numDots) {
+          const dotsContainer = document.getElementById('testimonial-dots');
+          dotsContainer.innerHTML = ''; // Limpiar dots existentes
+          for (let i = 0; i < numDots; i++) {
+            const dot = document.createElement('button');
+            dot.classList.add('dot', 'w-3', 'h-3', 'rounded-full', 'bg-gray-300', 'transition-colors', 'duration-300');
+            dot.addEventListener('click', () => {
+              stopTestimonialCarousel();
+              currentTestimonialIndex = i;
+              showTestimonial(currentTestimonialIndex);
+              startTestimonialCarousel();
+            });
+            dotsContainer.appendChild(dot);
+          }
+        }
+
+        function startTestimonialCarousel() {
+          const testimonials = document.querySelectorAll('#testimonial-carousel blockquote');
+          if (testimonials.length > 0) {
+            createDots(testimonials.length);
+            showTestimonial(currentTestimonialIndex);
+            if (testimonials.length > 1) {
+              testimonialInterval = setInterval(nextTestimonial, 5000); // Cambia cada 5 segundos
+            }
+          }
+        }
+
+        function stopTestimonialCarousel() {
+          clearInterval(testimonialInterval);
+        }
+
+        document.addEventListener('astro:page-load', () => {
+          startTestimonialCarousel();
+        });
+        document.addEventListener('astro:before-swap', () => {
+          stopTestimonialCarousel();
+        });
+      </script>
+
       {/* Sección de Últimos Artículos del Blog */}
-      <section class="py-20">
+      <section class="py-20 bg-[rgb(232,227,208)]">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8" data-aos="fade-up">
           <h2 class="text-4xl font-bold text-brand-secondary text-center mb-12 font-serif">Desde Mi Blog</h2>
           <div class="grid grid-cols-1 md:grid-cols-3 gap-8">

@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Lora:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Lora:wght@400;700&family=Montserrat:wght@400;700&display=swap');
 
 @font-face {
   font-family: 'Abigate Desgo';
@@ -20,4 +20,28 @@ body {
 h1, h2, h3, h4, h5, h6 {
   font-family: 'Lora', serif;
   color: theme('colors.brand-secondary');
+}
+
+.bg-opiniones {
+  background-image: url('/opiniones.png');
+  background-size: 75% auto;
+  background-position: center;
+  background-repeat: no-repeat;
+  position: relative;
+}
+
+.bg-opiniones::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(255, 255, 255, 0.7); /* Capa blanca semitransparente */
+  z-index: 1;
+}
+
+.bg-opiniones > * {
+  position: relative;
+  z-index: 2;
 }
