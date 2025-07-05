@@ -21,7 +21,7 @@ try {
 
 const psychologistName = profile ? `${profile.user.first_name} ${profile.user.last_name}` : '[Nombre]';
 ---
-<header class="bg-brand-light shadow-md sticky top-0 z-50">
+<header class="bg-brand-light sticky top-0 z-50" id="main-header">
   <nav class="container mx-auto px-6 py-4 flex flex-col items-center md:flex-row md:justify-between">
     <div class="md:order-1 hidden md:flex items-center space-x-4"> {/* Redes sociales a la izquierda en desktop */}
       {siteSettings && (
@@ -49,7 +49,7 @@ const psychologistName = profile ? `${profile.user.first_name} ${profile.user.la
         </div>
       )}
     </div>
-    <div class="md:order-2 mb-4 md:mb-0"> {/* Logo centrado en desktop, arriba en móvil */}
+    <div class="md:order-2 mb-4 md:mb-0 w-full flex justify-center"> {/* Logo centrado en desktop, arriba en móvil */}
       <a href="/">
         <img src="/logotipo.png" alt="Logotipo de la Psicóloga" id="header-logo" style="height: 120px; width: auto; transition: height 0.3s ease-in-out;" />
       </a>
@@ -61,12 +61,12 @@ const psychologistName = profile ? `${profile.user.first_name} ${profile.user.la
       </button>
     </div>
     <div id="mobile-menu" class="md:order-4 md:flex items-center space-x-8 hidden md:block w-full md:w-auto justify-center"> {/* Menú centrado en desktop, más separado */}
-      <a href="/" class="block md:inline-block text-brand-secondary hover:text-brand-primary">Inicio</a>
-      <a href="/about" class="block md:inline-block text-brand-secondary hover:text-brand-primary">Sobre Mí</a>
-      <a href="/servicios" class="block md:inline-block text-brand-secondary hover:text-brand-primary">Servicios</a>
-      <a href="/blog" class="block md:inline-block text-brand-secondary hover:text-brand-primary">Blog</a>
-      <a href="/libros" class="block md:inline-block text-brand-secondary hover:text-brand-primary">Tienda</a>
-      <a href="/contact" class="block md:inline-block text-brand-secondary hover:text-brand-primary">Contacto</a>
+      <a href="/" class="block md:inline-block text-brand-primary hover:text-brand-primary uppercase font-bold">Inicio</a>
+      <a href="/about" class="block md:inline-block text-brand-secondary hover:text-brand-primary uppercase font-bold">Sobre Mí</a>
+      <a href="/servicios" class="block md:inline-block text-brand-secondary hover:text-brand-primary uppercase font-bold">Servicios</a>
+      <a href="/blog" class="block md:inline-block text-brand-secondary hover:text-brand-primary uppercase font-bold">Blog</a>
+      <a href="/libros" class="block md:inline-block text-brand-secondary hover:text-brand-primary uppercase font-bold">Tienda</a>
+      <a href="/contact" class="block md:inline-block text-brand-secondary hover:text-brand-primary uppercase font-bold">Contacto</a>
     </div>
   </nav>
 </header>
@@ -96,6 +96,8 @@ const psychologistName = profile ? `${profile.user.first_name} ${profile.user.la
   // Script para el efecto de scroll en el logo
   function handleScroll() {
     const headerLogo = document.getElementById('header-logo');
+    const mainHeader = document.getElementById('main-header');
+
     if (headerLogo) {
       if (window.scrollY > 50) {
         headerLogo.style.height = '80px'; // h-20
@@ -103,13 +105,47 @@ const psychologistName = profile ? `${profile.user.first_name} ${profile.user.la
         headerLogo.style.height = '120px'; // h-30
       }
     }
+
+    if (mainHeader) {
+      if (window.scrollY > 50) { // Añadir sombra si hay scroll significativo
+        mainHeader.classList.add('shadow-md');
+      } else {
+        mainHeader.classList.remove('shadow-md');
+      }
+    }
   }
 
   document.addEventListener('astro:page-load', () => {
+    const mainHeader = document.getElementById('main-header');
+    if (mainHeader) {
+      mainHeader.classList.remove('shadow-md'); // Asegurarse de que no haya sombra al cargar
+    }
     window.addEventListener('scroll', handleScroll);
     handleScroll(); // Ejecutar al cargar la página para ajustar el tamaño inicial si ya hay scroll
   });
   document.addEventListener('astro:before-swap', () => {
     window.removeEventListener('scroll', handleScroll);
   });
+
+  // Script para el menú activo
+  function setActiveMenuItem() {
+    const currentPath = window.location.pathname;
+    const menuLinks = document.querySelectorAll('#mobile-menu a');
+
+    menuLinks.forEach(link => {
+      // Eliminar clases de activo de todos los enlaces
+      link.classList.remove('text-brand-primary');
+      link.classList.add('text-brand-secondary');
+
+      // Comprobar si el enlace corresponde a la página actual
+      // Manejar el caso de la página de inicio '/' específicamente
+      if (link.getAttribute('href') === currentPath || (currentPath === '/' && link.getAttribute('href') === '/')) {
+        link.classList.remove('text-brand-secondary');
+        link.classList.add('text-brand-primary');
+      }
+    });
+  }
+
+  document.addEventListener('astro:page-load', setActiveMenuItem);
+  document.addEventListener('astro:after-swap', setActiveMenuItem);
 </script>

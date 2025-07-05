@@ -11,8 +11,8 @@ const config = {
   theme: {
     extend: {
       colors: {
-        'brand-primary': '#F5A89A', // Salmón/Coral
-        'brand-primary-dark': '#F5A89A', // Salmón/Coral (using same for dark)
+        'brand-primary': 'rgb(238, 122, 107)', // Salmón/Coral
+        'brand-primary-dark': 'rgb(238, 122, 107)', // Salmón/Coral (using same for dark)
         'brand-secondary': '#2F4858', // Dark Slate Blue for headings (kept existing)
         'brand-light': '#FFF9F0', // Crema/Beige
         'brand-text': '#333333', // Negro/Gris oscuro
@@ -21,6 +21,7 @@ const config = {
       fontFamily: {
         sans: ['Inter', 'sans-serif'],
         serif: ['Lora', 'serif'],
+        abigate: ['Abigate Desgo', 'sans-serif'],
       },
     },
   },
