@@ -11,12 +11,12 @@ const config = {
   theme: {
     extend: {
       colors: {
-        'brand-primary': '#7FB2B2', // Muted Teal/Blue
-        'brand-primary-dark': '#5C8C8C', // Darker Teal/Blue
-        'brand-secondary': '#2F4858', // Dark Slate Blue for headings
-        'brand-light': '#F8FAFC', // Off-white background
-        'brand-text': '#1E293B', // Dark text
-        'brand-accent': '#F5DEB3', // Light Peach/Gold accent
+        'brand-primary': '#F5A89A', // Salmón/Coral
+        'brand-primary-dark': '#F5A89A', // Salmón/Coral (using same for dark)
+        'brand-secondary': '#2F4858', // Dark Slate Blue for headings (kept existing)
+        'brand-light': '#FFF9F0', // Crema/Beige
+        'brand-text': '#333333', // Negro/Gris oscuro
+        'brand-accent': '#DDE7F2', // Azul Sereno
       },
       fontFamily: {
         sans: ['Inter', 'sans-serif'],
